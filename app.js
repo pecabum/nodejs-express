@@ -10,6 +10,27 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
 
+/****************TESTING****************/
+/*
+    When we have ?test=1 in query string unit testing will be enabled
+*/ 
+// app.use(function(req, res, next){
+//  res.locals.showTests = app.get('env') !== 'production' && req.query.test === '1';
+//  next();
+// });
+
+// Testing about
+app.get('/about', function(req, res) {
+   res.render('about', {
+       fortune: fortune.getFortune(),
+       pageTestScript: '/qa/tests-about.js'
+   });
+
+});
+
+if( app.thing == null ) console.log( 'bleat!' );
+/****************TESTING****************/ 
+
 
 app.get('/', function(req, res){
     res.render('home');
