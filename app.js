@@ -1,9 +1,12 @@
-var express = require('express');
-var fortune = require('./lib/fortune.js');
-var eloquent = require('./query.js'); 
-var app = express();
-// set up handlebars view engine
+var express 	= require('express'),
+	fortune 	= require('./lib/fortune.js'),
+	eloquent	= require('./query.js'), 
+	formidable 	= require('formidable');
 
+
+var app = express();
+
+// set up handlebars view engine
 var handlebars = require('express3-handlebars').create({ defaultLayout:'main' });
 
 //Set handlebar library
@@ -44,27 +47,27 @@ app.get('/users/:id',function(req,res){
 
 /******************* DELETE REQUEST *******************/
 
-// app.delete('/api/tour/:id', function(req, res){
+app.delete('/api/tour/:id', function(req, res){
 
-// 	var i;
+	var i;
 
-// 	for( var i=tours.length-1; i>=0; i-- )
+	for( var i=tours.length-1; i>=0; i-- )
 
-// 		if( tours[i].id == req.params.id ) break;
+		if( tours[i].id == req.params.id ) break;
 
-// 	if( i>=0 ) {
+	if( i>=0 ) {
 
-// 		tours.splice(i, 1);
+		tours.splice(i, 1);
 
-// 		res.json({success: true});
+		res.json({success: true});
 
-// 	} else {
+	} else {
 
-// 		res.json({error: 'No such tour exists.'});
+		res.json({error: 'No such tour exists.'});
 
-// 	}
+	}
 
-// });
+});
 
 /******************* DEFAULT REQUEST *******************/
 
@@ -72,6 +75,27 @@ app.get('/', function(req, res){
     res.render('home');
 });
 
+
+// Upload form page
+app.get('/contest/vacation-photo',function(req,res){
+	var now = new Date();
+	res.render('vacation-photo',{
+		 year: now.getFullYear(),month: now.getMonth	()
+	 });
+});
+
+// Upload function
+app.post('/contest/vacation-photo/:year/:month', function(req, res){
+ 	var form = new formidable.IncomingForm();
+	form.parse(req, function(err, fields, files){
+		if(err) return res.redirect(303, '/error');
+		console.log('received fields:');
+		console.log(fields);
+		console.log('received files:');
+		console.log(files);
+		res.redirect(303, '/thank-you');
+	 });
+});
 
 app.get('/about', function(req, res){
 	res.render('about', { fortune: fortune.getFortune() });
